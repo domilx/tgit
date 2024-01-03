@@ -1,0 +1,4 @@
+tgit.spec
+dist/
+build/
+.vscode/
