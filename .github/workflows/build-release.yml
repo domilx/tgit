@@ -33,7 +33,7 @@ jobs:
           name: tgit-${{ github.run_number }}.exe
           path: dist/tgit-${{ github.run_number }}.exe
 
-    release:
+  release:
     needs: build
     runs-on: windows-latest
     steps:
