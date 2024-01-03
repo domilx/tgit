@@ -33,10 +33,9 @@ jobs:
           name: tgit-${{ github.run_number }}.exe
           path: dist/tgit-${{ github.run_number }}.exe
 
-  release:
+    release:
     needs: build
     runs-on: windows-latest
-    if: github.ref == 'refs/heads/main'  # Change this if you want releases on different/multiple branches
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v2
@@ -44,11 +43,12 @@ jobs:
           name: tgit-${{ github.run_number }}.exe
 
       - name: Create Release
+        id: create_release  # This ID is used to reference output variables of this step
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }}
+          tag_name: release-${{ github.run_number }}  # Make sure this is a unique tag for each release
           release_name: Release ${{ github.run_number }}
           draft: false
           prerelease: false
@@ -59,7 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}  # Correctly reference the output variable
           asset_path: ./tgit-${{ github.run_number }}.exe
           asset_name: tgit-${{ github.run_number }}.exe
           asset_content_type: application/octet-stream
